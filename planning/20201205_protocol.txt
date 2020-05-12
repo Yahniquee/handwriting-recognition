@@ -1,0 +1,57 @@
+
+
+To prepare for the meeting, make sure that you have selected a project
+manager. Moreover, you should have started and ideally completed the first
+project phase "Initiation". Make sure that you have worked out and written
+down the goals of the project (not only the goals of the client but also of
+the group itself) as well as possible steps, risks and open questions.
+You might have already started with the second phase "Planning". Let me
+again stress that this phase is very important and you should take it
+serious. I expect you to work out and write down a project plan including
+all tasks/milesones/time frames before you start with the third phase
+"Execution".
+Finally, let me point out that communication within the group including
+feedback (positive and negative) is very important for the success of the
+project and should be included into the project plan.
+
+    
+Goals: 
+	1. To recognise handwriting from an image using neural network model
+	Input: Image containing handwritten letters (in some form) 
+	Output: Letters
+	
+    Open question could be:  Can we recognise the handwriting from the video? (or live camera)
+    
+    
+    
+Steps: 
+	1. Neural Network performing on MNIST dataset with somewhat high accuracy1
+	(until 
+
+	2. Neural Network recognizing numbers and letters using some given data
+	
+	3. Reading/creating own data, i.e. creating input function, using an external camera, do image processing to seperate letters
+	
+	4 FINAL 15.07.2020 
+    
+Risks:
+	Accuracy
+	Setting Goals too high
+	Availability of training sets
+	Copying existing solutions instead of creating an own one
+	
+	
+Platforms / Languages / Packages:
+    Github(team work)
+    Python
+    Keras
+    Tensorflow
+    ...
+    
+
+
+
+
+
+
+
