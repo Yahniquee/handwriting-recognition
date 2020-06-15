@@ -15,7 +15,7 @@ from sklearn.model_selection import train_test_split
 
 #step 1 loading and preprocessing EMNIST dataset 
 
-mat = sio.loadmat('emnist-letters.mat')
+
 data = mat['dataset']
 
 
