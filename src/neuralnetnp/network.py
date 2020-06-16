@@ -1,4 +1,5 @@
 """
+Taken from Nielsen, adapted for Python 3.
 network.py
 ~~~~~~~~~~
 
@@ -61,10 +62,10 @@ class Network(object):
             for mini_batch in mini_batches:
                 self.update_mini_batch(mini_batch, eta)
             if test_data:
-                print( "Epoch {0}: {1} / {2}".format(
+                print("Epoch {0}: {1} / {2}".format(
                     j, self.evaluate(test_data), n_test))
             else:
-                print( "Epoch {0} complete".format(j))
+                print("Epoch {0} complete".format(j))
 
     def update_mini_batch(self, mini_batch, eta):
         """Update the network's weights and biases by applying
@@ -122,8 +123,9 @@ class Network(object):
         network outputs the correct result. Note that the neural
         network's output is assumed to be the index of whichever
         neuron in the final layer has the highest activation."""
-        test_results = [(np.argmax(self.feedforward(x)), y) for (x, y) in test_data]
-        return sum(int(x == np.argmax(y)) for (x, y) in test_results)
+        test_results = [(np.argmax(self.feedforward(x)), y)
+                        for (x, y) in test_data]
+        return sum(int(x == y) for (x, y) in test_results)
 
     def cost_derivative(self, output_activations, y):
         """Return the vector of partial derivatives \partial C_x /

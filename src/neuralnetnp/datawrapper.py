@@ -1,7 +1,10 @@
 import numpy as np
 
 def data_wrapper(training_data, test_data):
-    """Return a tuple containing ``(training_data, test_data)``. in a format more
+    """
+    Tranforms our database as given by load.load_mnist() to Nielsen's form.
+
+    Return a tuple containing ``(training_data, test_data)``. in a format more
     convenient for use in our implementation of neural networks.
 
     In particular, ``training_data`` is a list containing 60,000
@@ -24,10 +27,12 @@ def data_wrapper(training_data, test_data):
     tr_d[0] = tr_d[0].reshape(tr_d[0].shape[0], 784)
     te_d[0] = te_d[0].reshape(te_d[0].shape[0], 784)
     training_inputs = [np.reshape(x, (784, 1)) for x in tr_d[0]]
+    training_inputs = [x / 256 for x in training_inputs]
     training_results = [vectorized_result(y) for y in tr_d[1]]
-    training_data = zip(training_inputs, training_results)
+    training_data = list(zip(training_inputs, training_results))
     test_inputs = [np.reshape(x, (784, 1)) for x in te_d[0]]
-    test_data = zip(test_inputs, te_d[1])
+    test_inputs = [x / 256 for x in test_inputs]
+    test_data = list(zip(test_inputs, te_d[1]))
     return (training_data, test_data)
 
 def vectorized_result(j):
