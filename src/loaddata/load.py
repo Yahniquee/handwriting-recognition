@@ -152,27 +152,6 @@ def load_data_wrapper():
     return (training_data, validation_data, test_data)
 
 
-#mnist_train, mnist_test = load_mnist()
-
-#emnist_train, emnist_test = load_emnist()
-
-#trainX, trainY, testX, testY = load_mnist_online()
-
-#training_data, validation_data, test_data = load_mnist_offline()
-
-#tr_d, te_d = list(training_data), list(test_data)
-#tr_d[0] = tr_d[0].reshape(tr_d[0].shape[0], 784)
-#te_d[0] = te_d[0].reshape(te_d[0].shape[0], 784)
-#training_inputs = [np.reshape(x, (784, 1)) for x in tr_d[0]]
-#training_results = [vectorized_result(y) for y in tr_d[1]]
-#training_data = zip(training_inputs, training_results)
-#test_inputs = [np.reshape(x, (784, 1)) for x in te_d[0]]
-#test_data = zip(test_inputs, te_d[1])
-
-#plt.imshow(mnist_train[0][0])
-#plt.imshow(tr_d[0][0])
-
-
 
 
 
