@@ -1,0 +1,7 @@
+To do:
+    train CNN on EMNIST/byclass, EMNIST/balanced (mayber others), possibly change network architecture to improve performance
+    
+    extract images of single letters from multi letter image (maybe write in some form of template)
+    
+    visualize networks for presentation, compare performances
+        
