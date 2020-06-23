@@ -6,8 +6,8 @@ import datawrapper
 Uses dataset from Nielsen and dataset obtained via load.load_mnist() """
 
 # Our own dataset
-training_own, test_own = load.load_mnist()
-training_own, test_own = datawrapper.data_wrapper(training_own, test_own)
+training_own, test_own = load.load_emnist()
+#training_own, test_own = datawrapper.data_wrapper(training_own, test_own)
 
 #Nielsens Dataset
 training_data, validation_data, test_data = load.load_data_wrapper()
@@ -26,6 +26,6 @@ net_own = network.Network([784, 30, 20, 10])
 
 # Train networks
 print("Training a network on Nielsen's dataset")
-net.SGD(training_data, 3, 10, 3.0, test_data=test_data)
+#net.SGD(training_data, 3, 10, 3.0, test_data=test_data)
 print("Training a network on our data")
-net_own.SGD(training_own, 3, 10, 1.0, test_data=test_own)
+#net_own.SGD(training_own, 3, 10, 1.0, test_data=test_own)

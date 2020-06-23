@@ -85,7 +85,7 @@ def load_emnist():
     Warning: these tuples are very large and take up a lot of RAM"""
     print('Loading EMNIST database, this might take a while...')
     data = tfds.as_numpy(tfds.load(
-        'emnist',
+        "emnist/balanced",
         batch_size=-1,
         as_supervised=True,
     ))
