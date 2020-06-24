@@ -1,8 +1,9 @@
 import cv2 as cv
 import numpy as np
-import matplotlib.pyplot as plt
 import tensorflow as tf
-import keras
+import matplotlib.pyplot as plt
+import loaddata.load as load
+
 
 def image2contourcoord(img, thresh_noise = 40, thresh_contarea = 80, thresh_binary = 200):
     img_gray = img.copy()
@@ -36,9 +37,8 @@ def image2contourcoord(img, thresh_noise = 40, thresh_contarea = 80, thresh_bina
             # only for visualization
             img_rect = cv.rectangle(img_rect, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-    cv.imshow("All contours that are treated as letters", img_rect)
     print("Found %s contours that are treated as letters." % len(cnts_coord))
-    return cnts_coord, img_denoised, img_binary
+    return cnts_coord, img_denoised, img_binary, img_rect
 
 def contourcoord2wordcoord(cnts_coord, space = 50):
     cnts_coord.sort(key = lambda x: x[0])
@@ -72,8 +72,6 @@ def wordcoords2wordimage(wordcoords, img_processed, img_plot):
             img_word = cv.rectangle(img_word, (x, y), (x + w, y + h), (0, 255, 0), 2)
         words.append(letters)
         words_cnts.append(img_word)
-
-    #cv.imshow("Contours for first word", words_cnts[0])
 
     return words, words_cnts
 
@@ -118,19 +116,67 @@ def words_EMNIST2words_str(words_EMNIST, model, dic):
 
     return words
 
+def img2processedimg(img, h_smoothing):
+    img_gray = img.copy()
+    img_gray = cv.cvtColor(img_gray, cv.COLOR_BGR2GRAY)
+    img_gray_inv = cv.subtract(255, img_gray)
+    img_processed = cv.fastNlMeansDenoising(img_gray, h=h_smoothing)
+    img_processed = cv.bitwise_not(img_processed)
+    img_processed = cv.threshold(img_processed, 10, 255, cv.THRESH_TOZERO)[1]
+    img_processed = cv.threshold(img_processed, 100, 255, cv.THRESH_BINARY)[1]
+    img_processed = cv.blur(img_processed, (2,2))
 
-img = cv.imread('data/.png')
-model = tf.keras.models.load_model("emnist_balanced_let_read.model")
-dic = np.array(["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y", "Z","a","b","d","e","f","g","h","n","q","r","t"])
+    return img_processed
 
-cnts_coord, img_denoised, img_binary = image2contourcoord(img)
-wordcoords = contourcoord2wordcoord(cnts_coord)
-words, words_cnts = wordcoords2wordimage(wordcoords, img_binary, img)
+
+img = cv.imread('data/ML_team.png')
+model = tf.keras.models.load_model("emnist_let_read.model")
+dic = np.array(["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","a","b","d","e","f","g","h","n","q","r","t"])
+
+cnts_coord, img_denoised, img_binary, img_rect = image2contourcoord(img)
+wordcoords = contourcoord2wordcoord(cnts_coord, space = 80)
+img_processed = img2processedimg(img, 30)
+words, words_cnts = wordcoords2wordimage(wordcoords, img_processed, img)
 words_EMNIST = wordimages2squares28(words)
 
 [words_str, words_class] = words_EMNIST2words_str(words_EMNIST, model, dic)
 
+# plots
+cv.imshow("All contours that are treated as letters", img_rect)
+#cv.imshow("Contours for first word", words_cnts[0])
+
+
+
 print("You may have written: ", " ".join(words_str))
+
+training_data, test_data = load.load_emnist("balanced")
+(x_train, y_train) = training_data
+(x_test, y_test) = test_data
+
+x_train = x_train.reshape((x_train.shape[0], 28, 28), order='F')
+x_test = x_test.reshape((x_test.shape[0], 28, 28), order='F')
+
+correct = np.where( 20 == y_test)[0]
+print("Found %d correct labels" % len(correct))
+
+
+fig = plt.figure(1)
+fig.suptitle("Examples from EMNIST Dataset")
+for i, index in enumerate(correct[:9]):
+    plt.subplot(3, 3, i + 1)
+    im = x_test[index]
+    im = im.reshape(28,28)
+    plt.imshow(im, cmap='gray', interpolation='none')
+    plt.title("index {}, norm {}".format(index, int(np.linalg.norm(im))))
+    plt.tight_layout()
+
+fig2 = plt.figure(2)
+fig2.suptitle("First nine images classified by neural network")
+for j, letter in enumerate(words_EMNIST[0][:9]):
+    plt.subplot(3,3,j+1)
+    im = letter.reshape(28, 28)
+    plt.imshow(im, cmap='gray', interpolation='none')
+    plt.title("index {}, norm {}".format(j, int(np.linalg.norm(im))))
 
 
 
