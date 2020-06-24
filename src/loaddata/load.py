@@ -76,7 +76,7 @@ def load_mnist():
 
     return (training_data, testing_data)
 
-def load_emnist():
+def load_emnist(split = 'byclass'):
     """ Loads the EMNIST dataset via tensorflow_datasets.load(). At first execution downloads the database to a local
     directory (see documentation for tensorflow_datasets.load()), after that grabs database from this local directory.
     Returns training_data (697932) and testing_data (116323) each as a tuple of an input array 697932x28x28 resp.
@@ -85,7 +85,7 @@ def load_emnist():
     Warning: these tuples are very large and take up a lot of RAM"""
     print('Loading EMNIST database, this might take a while...')
     data = tfds.as_numpy(tfds.load(
-        "emnist/balanced",
+        "emnist/" + split,
         batch_size=-1,
         as_supervised=True,
     ))
