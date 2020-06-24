@@ -142,13 +142,12 @@ words_EMNIST = wordimages2squares28(words)
 [words_str, words_class] = words_EMNIST2words_str(words_EMNIST, model, dic)
 
 # plots
-cv.imshow("All contours that are treated as letters", img_rect)
+#cv.imshow("All contours that are treated as letters", img_rect)
 #cv.imshow("Contours for first word", words_cnts[0])
-
-
 
 print("You may have written: ", " ".join(words_str))
 
+"""
 training_data, test_data = load.load_emnist("balanced")
 (x_train, y_train) = training_data
 (x_test, y_test) = test_data
@@ -157,8 +156,6 @@ x_train = x_train.reshape((x_train.shape[0], 28, 28), order='F')
 x_test = x_test.reshape((x_test.shape[0], 28, 28), order='F')
 
 correct = np.where( 20 == y_test)[0]
-print("Found %d correct labels" % len(correct))
-
 
 fig = plt.figure(1)
 fig.suptitle("Examples from EMNIST Dataset")
@@ -169,6 +166,7 @@ for i, index in enumerate(correct[:9]):
     plt.imshow(im, cmap='gray', interpolation='none')
     plt.title("index {}, norm {}".format(index, int(np.linalg.norm(im))))
     plt.tight_layout()
+"""
 
 fig2 = plt.figure(2)
 fig2.suptitle("First nine images classified by neural network")
