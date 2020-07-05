@@ -12,10 +12,9 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 
 # step 1 loading and preprocessing EMNIST dataset
-
-
 import sys
 import tensorflow_datasets as tfds
+import loaddata.load as load
 
 
 def load_mnist():
@@ -73,7 +72,7 @@ def load_emnist():
 
 
 
-training_data, test_data = load_emnist()
+training_data, test_data = load.load_emnist("letters")
 (x_train, y_train) = training_data
 (x_test, y_test) = test_data
 
@@ -133,8 +132,8 @@ print('After conversion to one-hot:', y_train_one_hot[0])
 
 
 batch_size = 64
-epochs = 3
-num_classes = 47
+epochs = 5
+num_classes = nClasses
 
 # built the model
 
@@ -160,7 +159,7 @@ model.summary()
 This will show some parameters (weights and biases) in each layer and also the total parameters in your model'''
 
 # train the model/fiting
-'''
+
 model_train = model.fit(x_train, y_train_one_hot, batch_size=batch_size, epochs=epochs, verbose=1)
 
 # In[1]:
@@ -194,7 +193,7 @@ plt.show()
 # In[34]:
 
 
-model.save("emnist_balanced_let_read.model")
+model.save("models/cnn_emnist_letters_ep5.model")
 
 # In[11]:
 
@@ -248,8 +247,9 @@ for i, incorrect in enumerate(incorrect[:9]):
 # In[30]:
 
 
-'''Classification report will help us in identifying the misclassified classes in more detail.
-You will be able to observe for which class the model performed bad out of the given 26 classes'''
+
+Classification report will help us in identifying the misclassified classes in more detail.
+You will be able to observe for which class the model performed bad out of the given 26 classes
 
 from sklearn.metrics import classification_report
 
@@ -257,7 +257,7 @@ target_names = ["Class {}".format(i) for i in range(num_classes)]
 print(classification_report(y_test, predicted_classes, target_names=target_names))
 
 # In[ ]:
-
+'''
 
 
 
