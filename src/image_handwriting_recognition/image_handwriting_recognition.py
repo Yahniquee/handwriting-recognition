@@ -2,6 +2,7 @@ import cv2 as cv
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
+import argparse
 import loaddata.load as load
 
 
@@ -99,7 +100,7 @@ def wordimages2squares28(words):
     return words_EMNIST
 
 def words_EMNIST2words_str(words_EMNIST, model, dic):
-    words = [[],[]]
+    words = [[], []]
     for word in words_EMNIST:
         word_str = str()
         word_class = []
@@ -124,14 +125,29 @@ def img2processedimg(img, h_smoothing):
     img_processed = cv.bitwise_not(img_processed)
     img_processed = cv.threshold(img_processed, 10, 255, cv.THRESH_TOZERO)[1]
     img_processed = cv.threshold(img_processed, 100, 255, cv.THRESH_BINARY)[1]
-    img_processed = cv.blur(img_processed, (2,2))
+    #img_processed = cv.blur(img_processed, (2,2))
 
     return img_processed
 
+parser = argparse.ArgumentParser(description='Handwriting Recognition from Images')
+parser.add_argument('image', metavar= 'img', help='Filepath of input image')
 
-img = cv.imread('data/ML_team.png')
-model = tf.keras.models.load_model("emnist_let_read.model")
-dic = np.array(["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","a","b","d","e","f","g","h","n","q","r","t"])
+
+img = cv.imread('data/alphabets.png')
+model_balanced = tf.keras.models.load_model("models/cnn_drop_mnist_25ep.model")
+model_letters = tf.keras.models.load_model("models/cnn_drop_letters_25ep.model")
+model_numbers = tf.keras.models.load_model("models/emnist_balanced_let_read.model")
+
+dic_balanced = np.array(["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","a","b","d","e","f","g","h","n","q","r","t",])
+dic_letters = np.array(["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"])
+dic_numbers = np.array(["0","1","2","3","4","5","6","7","8","9"])
+
+dic = dic_letters
+model = tf.keras.models.load_model("models/cnn_emnist_lettters_ep5.model")
+
+#cnn_emnist_balanced_ep3.model seems to work best, ep5 as well
+
+
 
 cnts_coord, img_denoised, img_binary, img_rect = image2contourcoord(img)
 wordcoords = contourcoord2wordcoord(cnts_coord, space = 80)
@@ -170,7 +186,7 @@ for i, index in enumerate(correct[:9]):
 
 fig2 = plt.figure(2)
 fig2.suptitle("First nine images classified by neural network")
-for j, letter in enumerate(words_EMNIST[0][:9]):
+for j, letter in enumerate(words_EMNIST[1][:9]):
     plt.subplot(3,3,j+1)
     im = letter.reshape(28, 28)
     plt.imshow(im, cmap='gray', interpolation='none')
