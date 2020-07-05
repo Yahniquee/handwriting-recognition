@@ -76,7 +76,7 @@ def load_mnist():
 
     return (training_data, testing_data)
 
-def load_emnist(split = 'byclass'):
+def load_emnist(split = 'balanced'):
     """ Loads the EMNIST dataset via tensorflow_datasets.load(). At first execution downloads the database to a local
     directory (see documentation for tensorflow_datasets.load()), after that grabs database from this local directory.
     Returns training_data (697932) and testing_data (116323) each as a tuple of an input array 697932x28x28 resp.
@@ -100,6 +100,10 @@ def load_emnist(split = 'byclass'):
     training_data[0] = training_data[0].numpy()
     training_data[0] = training_data[0][:, :, :, 0]
     testing_data[0] = testing_data[0][:, :, :, 0]
+    if split == 'letters':
+        testing_data[1] = testing_data[1]-1
+        training_data[1] = training_data[1] - 1
+
     training_data = tuple(training_data)
     testing_data = tuple(testing_data)
 
