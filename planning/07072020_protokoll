@@ -1,0 +1,39 @@
+Table of contents:
+    Intro to the project (some words about goal and result expected)   
+    
+    Example 
+    
+   1. Data(preprocessing part) (Ismail)
+             explain the shapes or stuff we ecountered
+              during the coding part
+   
+    
+     2. Architecture:  (Alban)
+ why we choosed cnn(better for image classification)
+why didn't we use svm               
+           
+             
+    3. Training: (Julius, Alban)
+    Explain the cnn architecture and the layers
+       explain the dropout layer
+       explain the accuracy and validation accuracy(with the graphs)
+       when does overvftting occurs?
+       why does cross-validation helps with the overfitting problem
+     giving some "classification report" to look fancier
+       
+       
+       
+    
+    4.   Input function:(Jannik)
+    explain the part of splitting the letters in one image
+   (Jannik, Ismail)
+explain the difference between models that we trained and their accuracy
+    
+(Jannik shows implementation
+probably Ismail to)
+5. Final product
+
+(Alban, Julius, Jannik, Ismail):
+6. Lessons learned/what can be improved?
+(Julius)
+7. Who did what
