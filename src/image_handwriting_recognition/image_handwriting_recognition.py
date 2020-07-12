@@ -1,10 +1,10 @@
 import cv2 as cv
 import numpy as np
+import os as os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import argparse
-import loaddata.load as load
-
 
 def image2contourcoord(img, thresh_noise = 40, thresh_contarea = 80, thresh_binary = 200):
     img_gray = img.copy()
@@ -120,78 +120,87 @@ def words_EMNIST2words_str(words_EMNIST, model, dic):
 def img2processedimg(img, h_smoothing):
     img_gray = img.copy()
     img_gray = cv.cvtColor(img_gray, cv.COLOR_BGR2GRAY)
-    img_gray_inv = cv.subtract(255, img_gray)
     img_processed = cv.fastNlMeansDenoising(img_gray, h=h_smoothing)
     img_processed = cv.bitwise_not(img_processed)
     img_processed = cv.threshold(img_processed, 10, 255, cv.THRESH_TOZERO)[1]
     img_processed = cv.threshold(img_processed, 100, 255, cv.THRESH_BINARY)[1]
-    #img_processed = cv.blur(img_processed, (2,2))
+
 
     return img_processed
 
-parser = argparse.ArgumentParser(description='Handwriting Recognition from Images')
-parser.add_argument('image', metavar= 'img', help='Filepath of input image')
-
-
-img = cv.imread('data/alphabets.png')
-model_balanced = tf.keras.models.load_model("models/cnn_drop_mnist_25ep.model")
-model_letters = tf.keras.models.load_model("models/cnn_drop_letters_25ep.model")
-model_numbers = tf.keras.models.load_model("models/emnist_balanced_let_read.model")
-
 dic_balanced = np.array(["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","a","b","d","e","f","g","h","n","q","r","t",])
 dic_letters = np.array(["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"])
-dic_numbers = np.array(["0","1","2","3","4","5","6","7","8","9"])
+dic_mnist = np.array(["0","1","2","3","4","5","6","7","8","9"])
 
-dic = dic_letters
-model = tf.keras.models.load_model("models/cnn_emnist_lettters_ep5.model")
+parser = argparse.ArgumentParser(description='Handwriting Recognition from images using different neural networks    ')
+parser.add_argument('-i', '--img', type=str, nargs='?', default='data/ML_at_eUHH.png', help='Filepath of input image (default data/ML_at_eUHH.png).')
+parser.add_argument('-m', '--modeltype',type=str, nargs='?', default='balanced', help='Modeltype: balanced (default), letters or mnist.')
+parser.add_argument('-p', '--plot',  action='store_true', default=False, help=' Decide whether to show plots, default is False.')
+args = parser.parse_args()
+
+imagepath = args.img
+modeltype = args.modeltype
+
+if modeltype == 'balanced':
+    modelpath = "models/cnn_emnist_balanced_ep3.model"
+    dic = dic_balanced
+elif modeltype == 'letters':
+    modelpath = "models/cnn_emnist_letters_ep3.model"
+    dic = dic_letters
+elif modeltype == "mnist":
+    modelpath = "models/cnn_mnist_ep1.model"
+    dic = dic_mnist
+else:
+    raise ValueError(modeltype + ' is not a valud modeltype. Choose balanced, letters or mnist')
+
+img = cv.imread(imagepath)
+if img is None:
+    raise ValueError('Cannot find an image at ' + imagepath)
+
+print("Imagepath: ", imagepath)
+print("Modelpath: ", modelpath )
+model = tf.keras.models.load_model(modelpath)
+
+
 
 #cnn_emnist_balanced_ep3.model seems to work best, ep5 as well
-
-
+# letters_3 is good as well
 
 cnts_coord, img_denoised, img_binary, img_rect = image2contourcoord(img)
-wordcoords = contourcoord2wordcoord(cnts_coord, space = 80)
+wordcoords = contourcoord2wordcoord(cnts_coord, space = 70)
 img_processed = img2processedimg(img, 30)
 words, words_cnts = wordcoords2wordimage(wordcoords, img_processed, img)
 words_EMNIST = wordimages2squares28(words)
 
 [words_str, words_class] = words_EMNIST2words_str(words_EMNIST, model, dic)
 
-# plots
-#cv.imshow("All contours that are treated as letters", img_rect)
-#cv.imshow("Contours for first word", words_cnts[0])
 
 print("You may have written: ", " ".join(words_str))
 
-"""
-training_data, test_data = load.load_emnist("balanced")
-(x_train, y_train) = training_data
-(x_test, y_test) = test_data
+plots = args.plot
 
-x_train = x_train.reshape((x_train.shape[0], 28, 28), order='F')
-x_test = x_test.reshape((x_test.shape[0], 28, 28), order='F')
+if plots:
+    fig, ax = plt.subplots(3, 3)
+    if len(words_EMNIST[0]) <= 9:
+        fig.suptitle("First word as input to NN", fontsize=20)
+    else:
+        fig.suptitle("First nine letters as input to NN", fontsize=20)
+    i = 0
+    for j, letter in enumerate(words_EMNIST[0][:9]):
+        if j % 3 == 0 and j != 0:
+            i = i+1
+        j = j - (i * 3)
+        im = letter.reshape(28, 28)
+        ax[i][j].imshow(im, cmap='gray', interpolation='none', aspect='equal')
+        ax[i][j].axis('off')
+        ax[i][j].set_title('Classification: ' + words_str[0][j + (i*3)])
+    for row in ax:
+        for cell in row:
+            if not cell.images:
+                cell.set_axis_off()
 
-correct = np.where( 20 == y_test)[0]
-
-fig = plt.figure(1)
-fig.suptitle("Examples from EMNIST Dataset")
-for i, index in enumerate(correct[:9]):
-    plt.subplot(3, 3, i + 1)
-    im = x_test[index]
-    im = im.reshape(28,28)
-    plt.imshow(im, cmap='gray', interpolation='none')
-    plt.title("index {}, norm {}".format(index, int(np.linalg.norm(im))))
-    plt.tight_layout()
-"""
-
-fig2 = plt.figure(2)
-fig2.suptitle("First nine images classified by neural network")
-for j, letter in enumerate(words_EMNIST[1][:9]):
-    plt.subplot(3,3,j+1)
-    im = letter.reshape(28, 28)
-    plt.imshow(im, cmap='gray', interpolation='none')
-    plt.title("index {}, norm {}".format(j, int(np.linalg.norm(im))))
-
-
+    fig.show()
+    cv.imshow("All contours that are treated as letters", img_rect)
+    input("Press any key to exit.")
 
 
