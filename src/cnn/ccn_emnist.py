@@ -17,62 +17,7 @@ import tensorflow_datasets as tfds
 import loaddata.load as load
 
 
-def load_mnist():
-    """ Loads the MNIST dataset via tensorflow_datasets.load(). At first execution downloads the database to a local
-    directory (see documentation for tensorflow_datasets.load()), after that grabs database from this local directory.
-    Returns training_data (60.000) and testing_data (10.000) each as a tuple of an input array 60.000x28x28 resp.
-    10.000x28x28 with values between 0 and 255 and a result array of size 60.000 resp. 10.000 containing the associated
-    label between 0 and 61 representing number, small letters and capital letters"""
-
-    print('Loading MNIST database, this might take a while...')
-    data = tfds.as_numpy(tfds.load(
-        'mnist',
-        batch_size=-1,
-        as_supervised=True,
-    ))
-
-    training_data = list(data['train'])
-    testing_data = list(data['test'])
-    training_data[0] = training_data[0][:, :, :, 0]
-    testing_data[0] = testing_data[0][:, :, :, 0]
-    training_data = tuple(training_data)
-    testing_data = tuple(testing_data)
-
-    return (training_data, testing_data)
-
-
-def load_emnist():
-    """ Loads the EMNIST dataset via tensorflow_datasets.load(). At first execution downloads the database to a local
-    directory (see documentation for tensorflow_datasets.load()), after that grabs database from this local directory.
-    Returns training_data (697932) and testing_data (116323) each as a tuple of an input array 697932x28x28 resp.
-    116323x28x28 with values between 0 and 255 and a result array of size 60.000 resp. 10.000 containing the associated
-    labels between 0
-    Warning: these tuples are very large and take up a lot of RAM"""
-    print('Loading EMNIST database, this might take a while...')
-    data = tfds.as_numpy(tfds.load(
-        'emnist/balanced',
-        batch_size=-1,
-        as_supervised=True,
-    ))
-
-    training_data = list(data['train'])
-    testing_data = list(data['test'])
-    training_data[0] = tf.image.rot90(training_data[0], k=3)
-    testing_data[0] = tf.image.rot90(testing_data[0], k=3)
-    training_data[0] = tf.image.flip_left_right(training_data[0])
-    testing_data[0] = tf.image.flip_left_right(testing_data[0])
-    testing_data[0] = testing_data[0].numpy()
-    training_data[0] = training_data[0].numpy()
-    training_data[0] = training_data[0][:, :, :, 0]
-    testing_data[0] = testing_data[0][:, :, :, 0]
-    training_data = tuple(training_data)
-    testing_data = tuple(testing_data)
-
-    return (training_data, testing_data)
-
-
-
-training_data, test_data = load.load_emnist("letters")
+training_data, test_data = load.load_emnist("balanced")
 (x_train, y_train) = training_data
 (x_test, y_test) = test_data
 
@@ -98,7 +43,7 @@ print('train shape', x_train.shape)
 print('test shape', x_test.shape)
 
 # plots
-
+"""
 plt.subplot(121)
 plt.imshow(x_train[0, :, :], cmap='gray')
 plt.title("Ground Truth : {}".format(y_train[0]))
@@ -107,7 +52,7 @@ plt.title("Ground Truth : {}".format(y_train[0]))
 plt.subplot(122)
 plt.imshow(x_test[0, :], cmap='gray')
 plt.title("Ground Truth : {}".format(y_test[0]))
-
+"""
 # reshaping the training and testing data
 x_train = x_train.reshape(-1, 28, 28, 1)
 x_test = x_test.reshape(-1, 28, 28, 1)
@@ -132,7 +77,7 @@ print('After conversion to one-hot:', y_train_one_hot[0])
 
 
 batch_size = 64
-epochs = 5
+epochs = 3
 num_classes = nClasses
 
 # built the model
@@ -158,7 +103,7 @@ model.summary()
 '''Let's visualize the layers that you created in the above step by using the summary function. 
 This will show some parameters (weights and biases) in each layer and also the total parameters in your model'''
 
-# train the model/fiting
+# train the model/fitting
 
 model_train = model.fit(x_train, y_train_one_hot, batch_size=batch_size, epochs=epochs, verbose=1)
 
@@ -193,7 +138,7 @@ plt.show()
 # In[34]:
 
 
-model.save("models/cnn_emnist_letters_ep5.model")
+model.save("cnn_emnist_letters_ep3.model")
 
 # In[11]:
 

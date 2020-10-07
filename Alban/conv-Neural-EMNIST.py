@@ -19,7 +19,6 @@ from sklearn.model_selection import train_test_split
 data = mat['dataset']
 
 
-
 #x_train, x_test, y_train, y_test = train_test_split(data['train'][0,0]['images'][0,0],
                                                    # data['train'][0,0]['images'][0,0],
                                                    # test_size=0.2)
@@ -86,10 +85,10 @@ print('Output classes : ', classes)
 
 
 
-print(x_train.shape)
-print('test shape', x_test.shape)...
+print('traing shape', x_train.shape)
+print('test shape', x_test.shape)
 
-""x_train = x_train.reshape(-1, 28,28, 1)
+x_train = x_train.reshape(-1, 28,28, 1)
 x_test = x_test.reshape(-1, 28,28, 1)
 x_train.shape, x_test.shape
 
@@ -98,7 +97,7 @@ x_train.shape, x_test.shape
 x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
 x_train = x_train / 255.
-x_test = x_tesft / 255.f
+x_test = x_test / 255.
 
 
 #create model
@@ -124,7 +123,7 @@ model_train = model.fit(x_train, y_train_one_hot, batch_size=batch_size,epochs=e
 #test evaluation
 test_eval = model.evaluate(x_test, y_test_one_hot, verbose=0)
 print('Test loss:', test_eval[0])
-print('Test accuracy:', test_eval[1]
+print('Test accuracy:', test_eval[1])
 
 accuracy = model_train.history['acc']
 val_accuracy = model_train.history['val_acc']
