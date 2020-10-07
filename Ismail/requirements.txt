@@ -1,6 +1,0 @@
-numpy
-editdistance
-tensorflow
-opencv-python
-pandas
-sklearn
