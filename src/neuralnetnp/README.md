@@ -1,3 +1,0 @@
-The code in this folder is based on the Neural Networks Tutorial by Michael Nielsen, available at http://neuralnetworksanddeeplearning.com/ and https://github.com/mnielsen/neural-networks-and-deep-learning .
-It can run on the MNIST database provided by Nielsen as well as on a version of MNIST obtained by tensorflow_dataset.load().
-The code has been adapted to Python 3 and the formats of the datasets have been matched.
