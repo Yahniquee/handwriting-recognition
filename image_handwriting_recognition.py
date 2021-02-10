@@ -1,10 +1,11 @@
 import numpy as np
 import os as os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # suppress Tensorflow warnings
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # suppress warnings during tensorflow import
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import argparse
 from imageprocessing import *
+
 
 def words_EMNIST2words_str(words_EMNIST, model, dic):
     words = [[], []]
@@ -23,6 +24,7 @@ def words_EMNIST2words_str(words_EMNIST, model, dic):
         words[1].append(word_class)
 
     return words
+
 
 parser = argparse.ArgumentParser(description='Handwriting Recognition from images using CNNs.')
 parser.add_argument('-i', '--img', type=str, nargs='?', default='data/ML_at_eUHH.png',
@@ -62,9 +64,6 @@ if img is None:
 print('Imagepath: ', imagepath)
 print('Modelpath: ', modelpath )
 model = tf.keras.models.load_model(modelpath)
-
-# cnn_emnist_balanced_ep3.model seems to work best, ep5 as well
-# letters_3 is good as well
 
 # image processing
 cnts_coord, img_denoised, img_binary, img_rect = image2contourcoord(img)
