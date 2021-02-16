@@ -87,7 +87,7 @@ def wordimages2squares28(words):
             square = cv.resize(square, dsize=(26,26), interpolation=cv.INTER_LINEAR)
             square = np.pad(square, pad_width=1, mode='constant', constant_values=0)
             square = square[:, :, np.newaxis]
-            #square = square / 255
+            square = square / 255
 
             word_EMNIST.append(square)
 

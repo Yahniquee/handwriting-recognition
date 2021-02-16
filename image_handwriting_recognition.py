@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import argparse
 from imageprocessing import *
 
-
 def words_EMNIST2words_str(words_EMNIST, model, dic):
     words = [[], []]
     for word in words_EMNIST:
@@ -25,14 +24,14 @@ def words_EMNIST2words_str(words_EMNIST, model, dic):
 
     return words
 
-
+# parse input
 parser = argparse.ArgumentParser(description='Handwriting Recognition from images using CNNs.')
 parser.add_argument('-i', '--img', type=str, nargs='?', default='data/ML_at_eUHH.png',
                     help='Filepath of input image (default data/ML_at_eUHH.png).')
 parser.add_argument('-m', '--modeltype',type=str, nargs='?', default='balanced',
                     help='Modeltype: balanced (default), letters or mnist.')
 parser.add_argument('-p', '--plot',  action='store_true', default=False,
-                    help=' Decide whether to show plots, default is False.')
+                    help='Decide whether to show plots, default is False.')
 args = parser.parse_args()
 
 imagepath = args.img
@@ -62,7 +61,7 @@ if img is None:
     raise ValueError('Cannot find an image at ' + imagepath)
 
 print('Imagepath: ', imagepath)
-print('Modelpath: ', modelpath )
+print('Modelpath: ', modelpath)
 model = tf.keras.models.load_model(modelpath)
 
 # image processing
@@ -72,6 +71,7 @@ img_processed = img2processedimg(img, 30)
 words, words_cnts = wordcoords2wordimage(wordcoords, img_processed, img)
 words_EMNIST = wordimages2squares28(words)
 
+# model prediction
 [words_str, words_class] = words_EMNIST2words_str(words_EMNIST, model, dic)
 
 print('You may have written: ', ' '.join(words_str))
