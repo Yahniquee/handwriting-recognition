@@ -26,8 +26,8 @@ def words_EMNIST2words_str(words_EMNIST, model, dic):
 
 # parse input
 parser = argparse.ArgumentParser(description='Handwriting Recognition from images using CNNs.')
-parser.add_argument('-i', '--img', type=str, nargs='?', default='data/ML_at_eUHH.png',
-                    help='Filepath of input image (default data/ML_at_eUHH.png).')
+parser.add_argument('-i', '--img', type=str, nargs='?', default='data/ML.png',
+                    help='Filepath of input image (default data/ML.png).')
 parser.add_argument('-m', '--modeltype',type=str, nargs='?', default='balanced',
                     help='Modeltype: balanced (default), letters or mnist.')
 parser.add_argument('-p', '--plot',  action='store_true', default=False,

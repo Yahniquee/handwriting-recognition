@@ -12,7 +12,7 @@ import load
 from sklearn.model_selection import train_test_split
 
 #Data import & preprocessing
-training_data, test_data = load.load_emnist(split = 'letters')
+training_data, test_data = load.load_emnist(split = 'balanced')
 (x_train, y_train) = training_data
 (x_test, y_test) = test_data
 
@@ -64,7 +64,7 @@ model.summary()
 
 #Params for training
 batch_size = 64
-epochs = 1
+epochs = 4
 # training
 model_train = model.fit(x_train, train_label, batch_size=batch_size, epochs=epochs, verbose=1, validation_data=(valid_X, valid_label))
 
