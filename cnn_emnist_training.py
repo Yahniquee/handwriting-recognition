@@ -58,8 +58,8 @@ model.add(Flatten())
 model.add(Dense(128, activation='linear'))
 model.add(LeakyReLU(alpha=0.1))           
 #model.add(Dropout(0.3))
-model.add(Dense(num_classes, activation='sigmoid'))
-model.compile(loss=keras.losses.binary_crossentropy, optimizer=keras.optimizers.Adam(),metrics=['accuracy'])
+model.add(Dense(num_classes, activation='softmax'))
+model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adam(),metrics=['accuracy'])
 model.summary()
 
 #Params for training
