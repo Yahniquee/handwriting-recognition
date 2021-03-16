@@ -53,7 +53,7 @@ def contourcoord2wordcoord(cnts_coord, space = 50):
             words.append(word)
             word = []
 
-    print("Seperated the image into %s words. " % len(words))
+    print("Separated the image into %s words. " % len(words))
     return words
 
 def wordcoords2wordimage(wordcoords, img_processed, img_plot):
